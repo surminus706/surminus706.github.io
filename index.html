@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Surminus Style Landing - Game Enhancement Tools</title>
+  <title>Surminus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Performance boosts, gameplay assistance and QOL features for enhanced gaming experience.">
   
@@ -76,7 +76,7 @@
     .fade-in {
       opacity: 0;
       transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     .fade-in.visible {
@@ -87,7 +87,7 @@
     .slide-in-left {
       opacity: 0;
       transform: translateX(-50px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     .slide-in-left.visible {
@@ -98,7 +98,7 @@
     .slide-in-right {
       opacity: 0;
       transform: translateX(50px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     .slide-in-right.visible {
@@ -109,7 +109,7 @@
     .scale-in {
       opacity: 0;
       transform: scale(0.9);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     .scale-in.visible {
@@ -343,6 +343,7 @@
       margin: 0 auto;
       position: relative;
       overflow: hidden;
+      will-change: transform;
     }
 
     .hero::before {
@@ -619,7 +620,7 @@
       padding: 26px;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -2560,12 +2561,13 @@
         observer.observe(el);
       });
 
-      // ===== NAVIGATION SCROLL EFFECT =====
+      // ===== NAVIGATION SCROLL EFFECT (Optimized) =====
       const nav = document.getElementById('mainNav');
       const scrollTopBtn = document.querySelector('.scroll-top');
       let lastScrollTop = 0;
+      let scrollTimeout;
 
-      window.addEventListener('scroll', () => {
+      function handleScroll() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
         // Nav background on scroll
@@ -2575,7 +2577,7 @@
           nav.classList.remove('scrolled');
         }
 
-        // Nav hide/show on scroll
+        // Nav hide/show on scroll (throttled)
         if (scrollTop > lastScrollTop && scrollTop > 200) {
           nav.classList.add('hidden');
         } else {
@@ -2589,7 +2591,12 @@
         } else {
           scrollTopBtn.classList.remove('visible');
         }
-      });
+      }
+
+      window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(handleScroll, 10);
+      }, { passive: true });
 
       // Scroll to top functionality
       scrollTopBtn.addEventListener('click', () => {
@@ -2775,15 +2782,23 @@
         }
       });
 
-      // ===== PARALLAX EFFECT FOR HERO =====
+      // ===== PARALLAX EFFECT FOR HERO (Optimized) =====
+      let scrollAnimationId = null;
+      let lastScrollY = 0;
+      
       window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const hero = document.querySelector('.hero');
-        if (hero) {
-          const rate = scrolled * -0.5;
-          hero.style.transform = `translate3d(0, ${rate}px, 0)`;
+        lastScrollY = window.pageYOffset;
+        if (scrollAnimationId === null) {
+          scrollAnimationId = requestAnimationFrame(() => {
+            const hero = document.querySelector('.hero');
+            if (hero) {
+              const rate = lastScrollY * -0.3;
+              hero.style.transform = `translate3d(0, ${rate}px, 0)`;
+            }
+            scrollAnimationId = null;
+          });
         }
-      });
+      }, { passive: true });
     });
   </script>
 
