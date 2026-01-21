@@ -1626,6 +1626,89 @@
       letter-spacing: 0.1px;
     }
 
+    /* New Popup Card Styles */
+    .popup-card-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--green-soft);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .popup-download-card:hover .popup-card-icon {
+      background: var(--green);
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .popup-card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--green);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .popup-download-card:hover .popup-card-icon svg {
+      stroke: #052e16;
+    }
+
+    .popup-card-desc {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+    }
+
+    .popup-card-features {
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .popup-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      transition: color 0.3s ease;
+    }
+
+    .popup-feature-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .popup-feature-item svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--green);
+      flex-shrink: 0;
+    }
+
+    .popup-download-card:hover .popup-feature-item {
+      color: #f8fafc;
+    }
+
+    .popup-card-meta {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .popup-meta-badge {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--green);
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
     .popup-notification {
       position: fixed;
       bottom: 20px;
@@ -1885,8 +1968,45 @@
               </svg>
               Recommended
             </div>
+            <div class="popup-card-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="2" y1="17" x2="22" y2="17"></line>
+                <line x1="6" y1="21" x2="18" y2="21"></line>
+              </svg>
+            </div>
             <h3>Browser Extension</h3>
-            <p>Recommended for most users. Easy to install and use with all major browsers.</p>
+            <p class="popup-card-desc">Recommended for most users. Easiest to install with one-click setup.</p>
+            <div class="popup-card-features">
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>One-click install</span>
+              </div>
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Auto updates</span>
+              </div>
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>All browsers supported</span>
+              </div>
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>~2.5MB</span>
+              </div>
+            </div>
+            <div class="popup-card-meta">
+              <span class="popup-meta-badge">Install time: &lt;1 min</span>
+              <span class="popup-meta-badge">v2.2.3</span>
+            </div>
             <button class="popup-download-btn" data-type="extension">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1907,8 +2027,44 @@
               </svg>
               Advanced
             </div>
+            <div class="popup-card-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
             <h3>Tampermonkey Script</h3>
-            <p>For advanced users or compatibility reasons. More control and customization.</p>
+            <p class="popup-card-desc">For advanced users. Maximum control and customization options.</p>
+            <div class="popup-card-features">
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Full customization</span>
+              </div>
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Manual updates</span>
+              </div>
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Requires Tampermonkey</span>
+              </div>
+              <div class="popup-feature-item">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>~180KB</span>
+              </div>
+            </div>
+            <div class="popup-card-meta">
+              <span class="popup-meta-badge">Install time: 2-3 min</span>
+              <span class="popup-meta-badge">v2.2.3</span>
+            </div>
             <button class="popup-download-btn" data-type="script">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
