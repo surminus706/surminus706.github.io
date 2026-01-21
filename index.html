@@ -1,0 +1,2791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Surminus Style Landing - Game Enhancement Tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Performance boosts, gameplay assistance and QOL features for enhanced gaming experience.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+
+  <!-- Social Meta Tags -->
+  <meta property="og:title" content="Surminus - Game Enhancement Tools">
+  <meta property="og:description" content="Performance boosts, gameplay assistance and QOL features for enhanced gaming experience.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/shirokoclone6-bot/storage/main/surminus-og.jpg">
+  <meta property="og:url" content="https://surminus.com">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    :root {
+      --bg: #070a08;
+      --bg-soft: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.08);
+      --text: #e6e6e6;
+      --muted: #9aa0a6;
+      --green: #22c55e;
+      --green-soft: rgba(34,197,94,0.18);
+      --radius: 18px;
+      --focus-ring: 0 0 0 3px rgba(34,197,94,0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(34,197,94,0.08), transparent 40%),
+        radial-gradient(circle at 80% 40%, rgba(34,197,94,0.06), transparent 45%),
+        var(--bg);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grid Styles */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    /* Scroll Animation Styles */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide-in-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .slide-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .slide-in-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .slide-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .scale-in {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .scale-in.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .stagger-delay-1 { transition-delay: 0.1s; }
+    .stagger-delay-2 { transition-delay: 0.2s; }
+    .stagger-delay-3 { transition-delay: 0.3s; }
+    .stagger-delay-4 { transition-delay: 0.4s; }
+
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--green);
+      color: var(--bg);
+      padding: 8px;
+      z-index: 1001;
+      text-decoration: none;
+    }
+    
+    .skip-to-content:focus {
+      top: 0;
+    }
+
+    :focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    a { 
+      text-decoration: none; 
+      color: inherit;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      opacity: 0.8;
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: rgba(0,0,0,0.55);
+      border-bottom: 1px solid var(--border);
+      transform: translateY(0);
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(0,0,0,0.85);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    .nav.hidden {
+      transform: translateY(-100%);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--green);
+      transform: translateX(-100%);
+      transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .logo:hover::after {
+      transform: translateX(0);
+    }
+
+    .logo span { 
+      color: var(--green);
+      position: relative;
+      display: inline-block;
+    }
+
+    .logo span::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.5s ease;
+      z-index: -1;
+      border-radius: 4px;
+    }
+
+    .logo:hover span::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .logo:hover span {
+      color: var(--bg);
+      transition: color 0.5s 0.2s;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      position: relative;
+      padding: 8px 0;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--green);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Button Animation Styles */
+    .btn-primary {
+      background: var(--green);
+      color: #052e16;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: 0 0 20px var(--green-soft);
+      border: 2px solid transparent;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.6s ease;
+      z-index: -1;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 30px rgba(34,197,94,0.3);
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-primary.pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 20px var(--green-soft);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(34,197,94,0.4);
+      }
+      100% {
+        box-shadow: 0 0 20px var(--green-soft);
+      }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 120px 24px 90px;
+      text-align: center;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, var(--green-soft), transparent 70%);
+      filter: blur(60px);
+      transform: translate(-50%, -50%);
+      animation: float 6s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      margin-bottom: 22px;
+      font-size: 14px;
+      font-weight: 500;
+      animation: badgeBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s both;
+    }
+
+    @keyframes badgeBounce {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      80% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.1;
+      position: relative;
+    }
+
+    .hero h1 span { 
+      color: var(--green);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero h1 span::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: right;
+      animation: underlineReveal 1s ease 1s forwards;
+    }
+
+    @keyframes underlineReveal {
+      to {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+
+    .hero p {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 18px);
+      max-width: 720px;
+      margin-inline: auto;
+    }
+
+    .hero-actions {
+      margin-top: 36px;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      color: inherit;
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .btn-secondary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--green-soft), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary:hover::before {
+      transform: translateX(100%);
+    }
+
+    /* Scroll to top button */
+    .scroll-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(34,197,94,0.3);
+      border: none;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 6px 20px rgba(34,197,94,0.4);
+    }
+
+    .scroll-top svg {
+      width: 20px;
+      height: 20px;
+      stroke: #052e16;
+      transition: transform 0.3s ease;
+    }
+
+    .scroll-top:hover svg {
+      transform: translateY(-3px);
+    }
+
+    /* ===== SECTIONS ===== */
+    section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 24px;
+      scroll-margin-top: 20px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 36px);
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .section-title span { 
+      color: var(--green);
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title span::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.6s ease;
+    }
+
+    .section-title:hover span::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      max-width: 640px;
+      margin-bottom: 48px;
+    }
+
+    /* ===== FEEDBACK SLIDER ===== */
+    .feedback-slider-container {
+      position: relative;
+      overflow: hidden;
+      margin: 40px 0;
+    }
+
+    .feedback-slider {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+      gap: 24px;
+      padding: 10px 5px;
+    }
+
+    .feedback-slide {
+      flex: 0 0 calc(33.333% - 16px);
+      min-width: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .feedback-slide {
+        flex: 0 0 calc(50% - 12px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .feedback-slide {
+        flex: 0 0 100%;
+      }
+    }
+
+    /* ===== TESTIMONIAL CARDS ===== */
+    .card {
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.06),
+        rgba(255,255,255,0.02)
+      );
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, var(--green-soft), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+      z-index: -1;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(34,197,94,0.15);
+    }
+
+    .card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .testimonial-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .user-badge {
+      background: var(--green-soft);
+      color: var(--green);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .user-badge {
+      transform: translateY(-2px);
+    }
+
+    .developer-badge {
+      background: rgba(139, 92, 246, 0.18);
+      color: #8b5cf6;
+    }
+
+    .security-badge {
+      background: rgba(245, 158, 11, 0.18);
+      color: #f59e0b;
+    }
+
+    .contributor-badge {
+      background: rgba(59, 130, 246, 0.18);
+      color: #3b82f6;
+    }
+
+    .testimonial-quote {
+      margin: 0 0 24px 0;
+      padding-left: 16px;
+      border-left: 3px solid var(--green);
+      flex-grow: 1;
+      position: relative;
+    }
+
+    .testimonial-quote::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      font-size: 40px;
+      color: var(--green-soft);
+      font-family: serif;
+      opacity: 0.5;
+    }
+
+    .testimonial-quote p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 0;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-top: auto;
+    }
+
+    .author-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .author-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      transition: color 0.3s ease;
+    }
+
+    .card:hover .author-name {
+      color: var(--green);
+    }
+
+    .author-title {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .stars {
+      color: var(--green);
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 2px;
+    }
+
+    .stars svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--green);
+      animation: starTwinkle 2s infinite;
+    }
+
+    .stars svg:nth-child(2) { animation-delay: 0.2s; }
+    .stars svg:nth-child(3) { animation-delay: 0.4s; }
+    .stars svg:nth-child(4) { animation-delay: 0.6s; }
+    .stars svg:nth-child(5) { animation-delay: 0.8s; }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== SLIDER CONTROLS ===== */
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .slider-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      border: none;
+    }
+
+    .slider-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--green-soft), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .slider-btn:hover {
+      background: var(--green-soft);
+      border-color: var(--green);
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .slider-btn:hover::before {
+      left: 100%;
+    }
+
+    .slider-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text);
+      transition: stroke 0.3s ease;
+    }
+
+    .slider-btn:hover svg {
+      stroke: var(--green);
+    }
+
+    .slider-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .slider-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slider-dot::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--green);
+      transition: left 0.3s ease;
+    }
+
+    .slider-dot.active {
+      transform: scale(1.2);
+    }
+
+    .slider-dot.active::before {
+      left: 0;
+    }
+
+    .slider-dot:hover {
+      transform: scale(1.1);
+    }
+
+    .slider-dot:hover::before {
+      left: 0;
+    }
+
+    /* ===== FEATURE ICON ===== */
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--green-soft);
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-icon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--green);
+      transform: scale(0);
+      border-radius: 50%;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card:hover .feature-icon {
+      transform: rotateY(180deg) scale(1.1);
+    }
+
+    .card:hover .feature-icon::before {
+      transform: scale(1);
+    }
+
+    .feature-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--green);
+      fill: none;
+      stroke-width: 2;
+      z-index: 1;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card:hover .feature-icon svg {
+      stroke: #052e16;
+      transform: rotateY(-180deg);
+    }
+
+    /* ===== DOWNLOAD SECTION ===== */
+    .download-section {
+      padding: 80px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .download-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+    }
+
+    .download-features {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      transition: all 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-features::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, var(--green-soft), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+      z-index: -1;
+    }
+
+    .download-features:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(34,197,94,0.1);
+    }
+
+    .download-features:hover::before {
+      transform: translateX(100%);
+    }
+
+    .download-features h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-list li:hover {
+      transform: translateX(5px);
+    }
+
+    .feature-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-icon-small {
+      width: 22px;
+      height: 22px;
+      background: var(--green-soft);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-list li:hover .feature-icon-small {
+      transform: rotate(15deg) scale(1.1);
+      background: var(--green);
+    }
+
+    .feature-icon-small svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--green);
+      transition: all 0.3s ease;
+    }
+
+    .feature-list li:hover .feature-icon-small svg {
+      stroke: #052e16;
+      transform: rotate(-15deg);
+    }
+
+    .feature-content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+      color: var(--text);
+    }
+
+    .feature-content p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .download-card {
+      background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.1), 
+        rgba(34, 197, 94, 0.05)
+      );
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(34,197,94,0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+      z-index: -1;
+    }
+
+    .download-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(34,197,94,0.2);
+    }
+
+    .download-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .download-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--text);
+    }
+
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-soft);
+      color: var(--green);
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .version-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .download-card:hover .version-badge {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34,197,94,0.2);
+    }
+
+    .download-card:hover .version-badge::before {
+      left: 100%;
+    }
+
+    .download-btn-large {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--green);
+      color: #052e16;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      width: 100%;
+      max-width: 150px;
+      margin-bottom: 15px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .download-btn-large::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+      z-index: -1;
+    }
+
+    .download-btn-large:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 12px 25px rgba(34,197,94,0.4);
+    }
+
+    .download-btn-large:hover::before {
+      left: 100%;
+    }
+
+    .download-btn-large:active {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .platforms {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 15px;
+      transition: color 0.3s ease;
+    }
+
+    .download-card:hover .platforms {
+      color: var(--text);
+    }
+
+    .platforms svg {
+      width: 14px;
+      height: 14px;
+      vertical-align: middle;
+      transition: transform 0.3s ease;
+    }
+
+    .download-card:hover .platforms svg {
+      transform: translateX(3px);
+    }
+
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      margin-top: 18px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .doc-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--green);
+      transition: width 0.3s ease;
+    }
+
+    .doc-link:hover {
+      gap: 10px;
+    }
+
+    .doc-link:hover::after {
+      width: 100%;
+    }
+
+    .doc-link svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--green);
+      transition: transform 0.3s ease;
+    }
+
+    .doc-link:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* ===== STATS CONTAINER ===== */
+    .stats-container {
+      margin-top: 60px;
+      padding: 40px;
+      background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.05), 
+        rgba(34, 197, 94, 0.02)
+      );
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      transition: transform 0.5s ease;
+    }
+
+    .stats-container:hover {
+      transform: translateY(-5px);
+    }
+
+    .stats-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 35px;
+      color: var(--text);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+    }
+
+    .stat-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, var(--green-soft), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+      z-index: -1;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 25px rgba(34,197,94,0.15);
+    }
+
+    .stat-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    /* Updated Stat Icon with Vector Icons */
+    .stat-icon {
+      width: 45px;
+      height: 45px;
+      background: var(--green-soft);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .stat-card:hover .stat-icon {
+      transform: rotateY(180deg) scale(1.1);
+      background: var(--green);
+    }
+
+    .stat-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--green);
+      fill: none;
+      stroke-width: 2;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .stat-card:hover .stat-icon svg {
+      stroke: #052e16;
+      transform: rotateY(-180deg);
+    }
+
+    .stat-content {
+      flex: 1;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--green);
+      margin: 0 0 4px 0;
+      line-height: 1;
+      transition: color 0.3s ease;
+    }
+
+    .stat-card:hover .stat-value {
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 4px 0;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover .stat-label {
+      transform: translateX(5px);
+    }
+
+    .stat-desc {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0;
+      transition: color 0.3s ease;
+    }
+
+    .stat-card:hover .stat-desc {
+      color: var(--text);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 30px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ===== DOWNLOAD POPUP STYLES ===== */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .download-popup {
+      background: linear-gradient(135deg, #0a0f1a 0%, #070a15 100%);
+      border-radius: 16px;
+      padding: 25px;
+      width: 90%;
+      max-width: 450px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      position: relative;
+      transform: scale(0.9) translateY(20px);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: #ffffff;
+    }
+
+    .popup-overlay.active .download-popup {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    .close-popup {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #ffffff;
+      z-index: 10;
+      border: none;
+    }
+
+    .close-popup svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+    }
+
+    .close-popup:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: rotate(90deg);
+    }
+
+    .popup-header {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .popup-header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 5px;
+      line-height: 1.2;
+    }
+
+    .popup-header p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 2px;
+      line-height: 1.3;
+      font-weight: 400;
+    }
+
+    .popup-download-section {
+      margin-top: 15px;
+    }
+
+    .popup-download-section h2 {
+      font-size: 1.2rem;
+      color: #f8fafc;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .popup-download-options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .popup-download-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+    }
+
+    .popup-download-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(34, 197, 94, 0.4);
+      box-shadow: 0 8px 15px rgba(34, 197, 94, 0.15);
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    .popup-download-card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: #f8fafc;
+      font-weight: 700;
+    }
+
+    .popup-download-card p {
+      color: #94a3b8;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
+
+    .popup-download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--green);
+      color: #052e16;
+      padding: 8px 25px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.85rem;
+      text-align: center;
+      width: 100%;
+      max-width: 150px;
+      letter-spacing: 0.2px;
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+    }
+
+    .popup-download-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.4s;
+    }
+
+    .popup-download-btn:hover::before {
+      left: 100%;
+    }
+
+    .popup-download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
+    .popup-recommended-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: var(--green);
+      color: #052e16;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      letter-spacing: 0.1px;
+    }
+
+    .popup-advanced-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      letter-spacing: 0.1px;
+    }
+
+    .popup-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green);
+      color: #052e16;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 2001;
+      transform: translateX(300px);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      max-width: 250px;
+      font-size: 0.85rem;
+    }
+
+    .popup-notification.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .popup-notification.error {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    .popup-notification svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Hide text emojis and replace with SVGs */
+    .emoji {
+      display: none;
+    }
+
+    .svg-icon {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* ===== RESPONSIVE ENHANCEMENTS ===== */
+    @media (max-width: 768px) {
+      .nav-inner {
+        flex-direction: column;
+        gap: 16px;
+        padding: 12px 16px;
+      }
+      
+      .nav-links {
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .hero {
+        padding: 80px 16px 60px;
+      }
+      
+      section {
+        padding: 60px 16px;
+      }
+      
+      .hero-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+        max-width: 280px;
+      }
+
+      .stats-container {
+        padding: 25px 16px;
+      }
+      
+      .stat-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        padding: 18px;
+      }
+      
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .stat-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      
+      .stat-value {
+        font-size: 28px;
+      }
+
+      .download-section {
+        padding: 60px 16px;
+      }
+
+      .slider-controls {
+        margin-top: 30px;
+      }
+
+      .scroll-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+
+      /* Popup responsive */
+      .download-popup {
+        padding: 20px 15px;
+        width: 95%;
+        max-width: 400px;
+      }
+
+      .popup-header h1 {
+        font-size: 1.3rem;
+      }
+
+      .popup-header p {
+        font-size: 0.8rem;
+      }
+
+      .popup-download-options {
+        gap: 12px;
+      }
+
+      .popup-features li {
+        font-size: 0.9rem;
+      }
+
+      .popup-date-download {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .popup-download-btn {
+        padding: 7px 14px;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-links {
+        gap: 10px;
+      }
+      
+      .testimonial-header {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .user-badge {
+        align-self: flex-start;
+      }
+
+      .download-btn-large {
+        padding: 10px 20px;
+        font-size: 14px;
+        max-width: 220px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .download-popup {
+        padding: 16px 12px;
+        max-width: 350px;
+      }
+
+      .popup-download-card {
+        padding: 15px;
+      }
+
+      .popup-header h1 {
+        font-size: 1.2rem;
+      }
+
+      .popup-download-section h2 {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      .nav, .scroll-top, .popup-overlay, .hero-actions {
+        display: none !important;
+      }
+      
+      body {
+        background: white;
+        color: black;
+      }
+      
+      .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip to main content link -->
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <!-- Scroll to top button -->
+  <button class="scroll-top" aria-label="Scroll to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <!-- Download Popup -->
+  <div class="popup-overlay" id="downloadPopup">
+    <div class="download-popup">
+      <button class="close-popup" id="closePopup" aria-label="Close download popup">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <div class="popup-header">
+        <h1>Download SurMinus</h1>
+      </div>
+
+      <div class="popup-download-section">
+        <div class="popup-download-options">
+          <!-- Browser Extension Card -->
+          <div class="popup-download-card" id="popupExtensionCard">
+            <div class="popup-recommended-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              Recommended
+            </div>
+            <h3>Browser Extension</h3>
+            <p>Recommended for most users. Easy to install and use with all major browsers.</p>
+            <button class="popup-download-btn" data-type="extension">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download Extension
+            </button>
+          </div>
+          
+          <!-- Tampermonkey Script Card -->
+          <div class="popup-download-card" id="popupScriptCard">
+            <div class="popup-advanced-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              Advanced
+            </div>
+            <h3>Tampermonkey Script</h3>
+            <p>For advanced users or compatibility reasons. More control and customization.</p>
+            <button class="popup-download-btn" data-type="script">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download Script
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup Notification -->
+  <div class="popup-notification" id="popupNotification">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+    <div class="notification-text">Download started for <span id="popupDownloadType">Extension</span>!</div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav" id="mainNav">
+    <div class="nav-inner">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: var(--green);" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Surminus</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#feedback">Feedback</a>
+        <a href="#" rel="noopener noreferrer" target="_blank">Discord</a>
+        <button class="btn-primary pulse" id="navDownloadBtn" aria-label="Get Surminus Now">
+          <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: #052e16;" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Get it Now
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <main id="main-content">
+    <div class="hero">
+      <div class="badge fade-in" aria-label="Introduction">
+        <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        Hi!
+      </div>
+      <h1 class="fade-in stagger-delay-1">Level Up Your <span>Gameplay</span></h1>
+      <p class="fade-in stagger-delay-2">
+        Performance boosts, gameplay assistance and QOL features
+        that make your experience way better.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary pulse fade-in stagger-delay-3" id="heroDownloadBtn">
+          <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: #052e16;" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Get it Now
+        </button>
+        <a class="btn-secondary fade-in stagger-delay-4" href="#features">
+          Explore Features
+          <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section id="features" aria-labelledby="features-heading" role="region">
+      <h2 id="features-heading" class="section-title fade-in">Why Players Choose <span>Surminus</span></h2>
+      <p class="section-desc fade-in">
+        All the power you need — without sacrificing performance or control.
+      </p>
+
+      <div class="grid">
+        <article class="card fade-in">
+          <div class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
+            </svg>
+          </div>
+          <h3>Performance Boost</h3>
+          <p>Smoother gameplay with higher FPS and lower latency.</p>
+        </article>
+
+        <article class="card fade-in stagger-delay-1">
+          <div class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9"/>
+              <line x1="12" y1="3" x2="12" y2="7"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+              <line x1="3" y1="12" x2="7" y2="12"/>
+              <line x1="17" y1="12" x2="21" y2="12"/>
+            </svg>
+          </div>
+          <h3>Aim Assistance</h3>
+          <p>Smart prediction keeps your crosshair on target.</p>
+        </article>
+
+        <article class="card fade-in stagger-delay-2">
+          <div class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <h3>Visual Enhancements</h3>
+          <p>ESP, indicators and zoom for full awareness.</p>
+        </article>
+
+        <article class="card fade-in stagger-delay-3">
+          <div class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.6 1.6 0 0 0 .3 1.7l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.7-.3"/>
+            </svg>
+          </div>
+          <h3>Great Modularity</h3>
+          <p>Toggle features individually to match your style.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- FEEDBACK SECTION với Slider -->
+    <section id="feedback" aria-labelledby="feedback-heading" role="region">
+      <div class="section-header" style="text-align: center;">
+        <span class="badge fade-in">
+          <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+          Community Feedback
+        </span>
+        <h2 id="feedback-heading" class="section-title fade-in stagger-delay-1">What <span>Gamers</span> Are Saying</h2>
+        <p class="section-desc fade-in stagger-delay-2" style="margin: 0 auto; max-width: 700px;">
+          From casual players to gaming legends, everyone loves Surminus. 
+          Join our community of satisfied users who have transformed their gaming experience.
+        </p>
+      </div>
+
+      <!-- Feedback Slider Container -->
+      <div class="feedback-slider-container">
+        <div class="feedback-slider" id="feedbackSlider">
+          <!-- Slide 1: Drion95 -->
+          <div class="feedback-slide">
+            <article class="card testimonial-card">
+              <div class="testimonial-header">
+                <div class="stars" aria-label="5 out of 5 stars">
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div class="user-badge developer-badge">Developer</div>
+              </div>
+              <blockquote class="testimonial-quote">
+                <p>"surminus is the best cheat lol"</p>
+              </blockquote>
+              <div class="testimonial-author">
+                <div class="author-info">
+                  <strong class="author-name">Drion95</strong>
+                  <small class="author-title">Developer of survevmods.com</small>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Slide 2: askile -->
+          <div class="feedback-slide">
+            <article class="card testimonial-card">
+              <div class="testimonial-header">
+                <div class="stars" aria-label="5 out of 5 stars">
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div class="user-badge security-badge">Security Expert</div>
+              </div>
+              <blockquote class="testimonial-quote">
+                <p>"This shit is probably never getting detected, can't find any way to detect"</p>
+              </blockquote>
+              <div class="testimonial-author">
+                <div class="author-info">
+                  <strong class="author-name">askile</strong>
+                  <small class="author-title">A survev.io GitHub contributor</small>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Slide 3: Reqqie -->
+          <div class="feedback-slide">
+            <article class="card testimonial-card">
+              <div class="testimonial-header">
+                <div class="stars" aria-label="5 out of 5 stars">
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div class="user-badge contributor-badge">JIT Developer</div>
+              </div>
+              <blockquote class="testimonial-quote">
+                <p>"literally cannot imagine playing without this MEOW"</p>
+              </blockquote>
+              <div class="testimonial-author">
+                <div class="author-info">
+                  <strong class="author-name">Reqqie</strong>
+                  <small class="author-title">Original developer of the EcmaScript JIT</small>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Slide 4: Chevrolet (aka pyggus) -->
+          <div class="feedback-slide">
+            <article class="card testimonial-card">
+              <div class="testimonial-header">
+                <div class="stars" aria-label="5 out of 5 stars">
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div class="user-badge">Artist</div>
+              </div>
+              <blockquote class="testimonial-quote">
+                <p>"⏰ i cant stop using hack now since i started lo!z"</p>
+              </blockquote>
+              <div class="testimonial-author">
+                <div class="author-info">
+                  <strong class="author-name">Chevrolet (aka pyggus)</strong>
+                  <small class="author-title">Brawlstars spike r34 artist</small>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Slide 5: 4hmxd -->
+          <div class="feedback-slide">
+            <article class="card testimonial-card">
+              <div class="testimonial-header">
+                <div class="stars" aria-label="5 out of 5 stars">
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div class="user-badge">Philosopher</div>
+              </div>
+              <blockquote class="testimonial-quote">
+                <p>"This cheat is exquisite."</p>
+              </blockquote>
+              <div class="testimonial-author">
+                <div class="author-info">
+                  <strong class="author-name">4hmxd</strong>
+                  <small class="author-title">Greek philosopher, inventor of the Pythagoras theorem</small>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slider Controls -->
+      <div class="slider-controls">
+        <button class="slider-btn" id="prevBtn" aria-label="Previous feedback">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        
+        <div class="slider-dots" id="sliderDots">
+          <!-- Dots will be generated by JavaScript -->
+        </div>
+        
+        <button class="slider-btn" id="nextBtn" aria-label="Next feedback">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Stats Section với Vector Icons -->
+      <div class="stats-container fade-in">
+        <h3 class="stats-title">Community Metrics</h3>
+        <div class="stats-grid">
+          <div class="stat-card slide-in-left">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value">95%</h3>
+              <p class="stat-label">Satisfaction Rate</p>
+              <small class="stat-desc">Based on user surveys</small>
+            </div>
+          </div>
+          
+          <div class="stat-card slide-in-left stagger-delay-1">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value">300+</h3>
+              <p class="stat-label">Active Users</p>
+              <small class="stat-desc">Growing daily</small>
+            </div>
+          </div>
+          
+          <div class="stat-card slide-in-left stagger-delay-2">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value">4.8/5</h3>
+              <p class="stat-label">Average Rating</p>
+              <small class="stat-desc">Community feedback</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD SECTION -->
+    <section id="download" class="download-section" aria-labelledby="download-heading" role="region">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <h2 id="download-heading" class="section-title fade-in" style="margin-bottom: 16px;">Ready to <span>Elevate</span> Your Experience?</h2>
+        <p class="section-desc fade-in stagger-delay-1" style="max-width: 600px; margin: 0 auto;">
+          Join hundreds of players who have already enhanced their survey.io gameplay with Surminus. 
+          Download now and see the difference for yourself.
+        </p>
+      </div>
+
+      <div class="download-grid">
+        <!-- Left Column: Features -->
+        <div class="download-features slide-in-left">
+          <h3>What's Included</h3>
+          <ul class="feature-list">
+            <li>
+              <div class="feature-icon-small">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                  <polyline points="16 6 12 2 8 6"></polyline>
+                  <line x1="12" y1="2" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <div class="feature-content">
+                <h4>Regular Updates & Maintenance</h4>
+                <p>Continuous improvements and bug fixes, forever.</p>
+              </div>
+            </li>
+            <li>
+              <div class="feature-icon-small">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <div class="feature-content">
+                <h4>Active Support</h4>
+                <p>Get help and connect with others in our Discord community.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right Column: Download Card -->
+        <div class="download-card slide-in-right">
+          <h3>Overview</h3>
+          <div class="version-badge">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+            Current Version 2.2.3
+          </div>
+          
+          <button class="download-btn-large pulse" id="sectionDownloadBtn" aria-label="Download Surminus Version 2.2.3">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Now
+          </button>
+          
+          <a href="#" class="doc-link">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            View Documentation
+          </a>
+          
+          <div class="platforms">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 19l-7-7 7-7"></path>
+              <path d="M22 12H3"></path>
+            </svg>
+            Windows, macOS & Linux supported
+            <br>
+            <small style="font-size: 11px; opacity: 0.7;">A Chromium-based browser is required</small>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo" class="fade-in">
+    <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 5px;" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    © 2025 Surminus. All rights reserved.
+    <p style="margin-top: 10px; font-size: 11px;">
+      This is a demonstration page. Use responsibly.
+    </p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // ===== POPUP FUNCTIONALITY =====
+      const downloadPopup = document.getElementById('downloadPopup');
+      const closePopup = document.getElementById('closePopup');
+      const sectionDownloadBtn = document.getElementById('sectionDownloadBtn');
+      const heroDownloadBtn = document.getElementById('heroDownloadBtn');
+      const navDownloadBtn = document.getElementById('navDownloadBtn');
+      const popupNotification = document.getElementById('popupNotification');
+      const popupDownloadType = document.getElementById('popupDownloadType');
+      
+      const popupExtensionCard = document.getElementById('popupExtensionCard');
+      const popupScriptCard = document.getElementById('popupScriptCard');
+      const popupExtensionBtn = popupExtensionCard.querySelector('.popup-download-btn');
+      const popupScriptBtn = popupScriptCard.querySelector('.popup-download-btn');
+
+      // URLs for downloads
+      const downloadLinks = {
+        extension: '#', // Thay đổi thành link thực tế nếu có extension
+        script: 'https://github.com/shirokoclone6-bot/storage/releases/download/Surminus/surminus.user.js'
+      };
+
+      // Function to show popup
+      function showPopup() {
+        document.body.style.overflow = 'hidden';
+        downloadPopup.classList.add('active');
+      }
+
+      // Function to hide popup
+      function hidePopup() {
+        document.body.style.overflow = '';
+        downloadPopup.classList.remove('active');
+      }
+
+      // Function to show notification
+      function showNotification(type, success = true) {
+        const typeName = type === 'extension' ? 'Browser Extension' : 'Tampermonkey Script';
+        popupDownloadType.textContent = typeName;
+        
+        if (success) {
+          popupNotification.classList.remove('error');
+          popupNotification.querySelector('svg').innerHTML = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>';
+          popupNotification.querySelector('.notification-text').innerHTML = 
+            `Download started for <strong>${typeName}</strong>!`;
+        } else {
+          popupNotification.classList.add('error');
+          popupNotification.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>';
+          popupNotification.querySelector('.notification-text').innerHTML = 
+            `Download link for <strong>${typeName}</strong> not available yet.`;
+        }
+        
+        popupNotification.classList.add('show');
+        
+        setTimeout(() => {
+          popupNotification.classList.remove('show');
+        }, 4000);
+      }
+
+      // Function to trigger download
+      function triggerDownload(type) {
+        const link = downloadLinks[type];
+        
+        if (link && link !== '#') {
+          // Sửa ở đây: Tạo link ẩn để tải file
+          const downloadLink = document.createElement('a');
+          downloadLink.href = link;
+          downloadLink.target = '_blank';
+          
+          // Đặt tên file
+          if (type === 'script') {
+            downloadLink.download = 'surminus.user.js';
+          }
+          
+          // Thêm vào DOM, click, rồi xóa
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+          
+          // Show notification
+          showNotification(type, true);
+          
+          // Close popup
+          setTimeout(() => {
+            hidePopup();
+          }, 500);
+        } else {
+          showNotification(type, false);
+          console.warn(`Download link for ${type} is not configured.`);
+        }
+      }
+
+      // Event Listeners for all download buttons
+      sectionDownloadBtn.addEventListener('click', showPopup);
+      heroDownloadBtn.addEventListener('click', showPopup);
+      navDownloadBtn.addEventListener('click', showPopup);
+      
+      closePopup.addEventListener('click', hidePopup);
+
+      // Close popup when clicking outside
+      downloadPopup.addEventListener('click', (e) => {
+        if (e.target === downloadPopup) {
+          hidePopup();
+        }
+      });
+
+      // Close popup with Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && downloadPopup.classList.contains('active')) {
+          hidePopup();
+        }
+      });
+
+      // Add click events to popup buttons
+      popupExtensionBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerDownload('extension');
+      });
+
+      popupScriptBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerDownload('script');
+      });
+
+      // Add click events to entire popup cards
+      popupExtensionCard.addEventListener('click', () => {
+        triggerDownload('extension');
+      });
+
+      popupScriptCard.addEventListener('click', () => {
+        triggerDownload('script');
+      });
+
+      // ===== SCROLL ANIMATIONS =====
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all animated elements
+      document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+        observer.observe(el);
+      });
+
+      // ===== NAVIGATION SCROLL EFFECT =====
+      const nav = document.getElementById('mainNav');
+      const scrollTopBtn = document.querySelector('.scroll-top');
+      let lastScrollTop = 0;
+
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Nav background on scroll
+        if (scrollTop > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+
+        // Nav hide/show on scroll
+        if (scrollTop > lastScrollTop && scrollTop > 200) {
+          nav.classList.add('hidden');
+        } else {
+          nav.classList.remove('hidden');
+        }
+        lastScrollTop = scrollTop;
+
+        // Scroll to top button
+        if (scrollTop > 500) {
+          scrollTopBtn.classList.add('visible');
+        } else {
+          scrollTopBtn.classList.remove('visible');
+        }
+      });
+
+      // Scroll to top functionality
+      scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+
+      // ===== FEEDBACK SLIDER =====
+      const slider = document.getElementById('feedbackSlider');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const sliderDots = document.getElementById('sliderDots');
+      
+      const slides = document.querySelectorAll('.feedback-slide');
+      const totalSlides = slides.length;
+      
+      let slidesPerView = 3;
+      if (window.innerWidth <= 1024) slidesPerView = 2;
+      if (window.innerWidth <= 768) slidesPerView = 1;
+      
+      let currentSlide = 0;
+      const totalPages = Math.ceil(totalSlides / slidesPerView);
+      
+      // Tạo dots
+      function createDots() {
+        sliderDots.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'slider-dot';
+          if (i === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => goToSlide(i));
+          sliderDots.appendChild(dot);
+        }
+      }
+      
+      // Cập nhật slide
+      function updateSlider() {
+        const slideWidth = slides[0].offsetWidth + 24; // + gap
+        const translateX = -currentSlide * slideWidth * slidesPerView;
+        slider.style.transform = `translateX(${translateX}px)`;
+        
+        // Cập nhật dots
+        document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentSlide);
+        });
+      }
+      
+      // Chuyển đến slide cụ thể
+      function goToSlide(slideIndex) {
+        currentSlide = slideIndex;
+        if (currentSlide < 0) currentSlide = totalPages - 1;
+        if (currentSlide >= totalPages) currentSlide = 0;
+        updateSlider();
+      }
+      
+      // Next slide
+      function nextSlide() {
+        currentSlide++;
+        if (currentSlide >= totalPages) currentSlide = 0;
+        updateSlider();
+      }
+      
+      // Previous slide
+      function prevSlide() {
+        currentSlide--;
+        if (currentSlide < 0) currentSlide = totalPages - 1;
+        updateSlider();
+      }
+      
+      // Auto slide
+      let autoSlideInterval;
+      function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+      }
+      
+      function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+      }
+      
+      // Event Listeners
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+      
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+      
+      // Pause auto slide on hover
+      slider.addEventListener('mouseenter', stopAutoSlide);
+      slider.addEventListener('mouseleave', startAutoSlide);
+      
+      // Responsive handling
+      function handleResize() {
+        const oldSlidesPerView = slidesPerView;
+        
+        if (window.innerWidth <= 768) {
+          slidesPerView = 1;
+        } else if (window.innerWidth <= 1024) {
+          slidesPerView = 2;
+        } else {
+          slidesPerView = 3;
+        }
+        
+        if (oldSlidesPerView !== slidesPerView) {
+          const newTotalPages = Math.ceil(totalSlides / slidesPerView);
+          if (currentSlide >= newTotalPages) {
+            currentSlide = newTotalPages - 1;
+          }
+          createDots();
+          updateSlider();
+        }
+      }
+      
+      // Initialize
+      createDots();
+      updateSlider();
+      startAutoSlide();
+      
+      // Responsive
+      window.addEventListener('resize', handleResize);
+      
+      // Touch support for mobile
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      slider.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoSlide();
+      });
+      
+      slider.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        startAutoSlide();
+      });
+      
+      function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+        }
+      }
+
+      // ===== BUTTON PULSE ANIMATION =====
+      const pulseButtons = document.querySelectorAll('.pulse');
+      pulseButtons.forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+          btn.style.animation = 'none';
+          setTimeout(() => {
+            btn.style.animation = 'pulse 2s infinite';
+          }, 10);
+        });
+      });
+
+      // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        if (anchor.getAttribute('href') !== '#') {
+          anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+              });
+            }
+          });
+        }
+      });
+
+      // ===== PARALLAX EFFECT FOR HERO =====
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero');
+        if (hero) {
+          const rate = scrolled * -0.5;
+          hero.style.transform = `translate3d(0, ${rate}px, 0)`;
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
